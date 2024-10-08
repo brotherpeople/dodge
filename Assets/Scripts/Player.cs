@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -24,10 +23,13 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(toX, toY, transform.position.z);
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        if(other.gameObject.tag == "Bullet") {
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Bullet")
+        {
             Debug.Log("Game Over");
             gameObject.GetComponent<Player>().enabled = false;
+            
         }
     }
 }

@@ -6,28 +6,81 @@ using UnityEngine;
 
 public class BulletSpawner : MonoBehaviour
 {
-    public GameObject Bullet;
-    private UnityEngine.Vector3 direction = UnityEngine.Vector3.zero;
+    public GameObject bulletPrefab;
 
-    // set origin location outside the box
-    // 1. from leftside: -5.6f < posX < -4.6f, -5.6f < posY < 5.6f
-    // 2. from rightside: 4.6f < posX < 5.6f, -5.6f < posY < 5.6f
-    // 3. from upside: -5.6f < posX < 5.6f, 4.6f < posY < 5.6f
-    // 4. from downside: -5.6f < posX < 5.6f, -5.6f < posY < -4.6f
-    
-    // towards anywhere but outside the box
-    // 1. from leftside: -4.6f < posX, 
-    void Start() { StartEnemyRoutine(); }
-    void StartEnemyRoutine() { StartCoroutine("BulletRoutine"); }
-    public void StopEnemyRoutine() { StopCoroutine("BulletRoutine"); }
+    [SerializeField]
+    private int initialBullets = 20;
 
-    IEnumerator BulletRoutine() {
-        yield return new WaitForSeconds(1f);
-        direction = Random.insideUnitCircle.normalized;
+    [SerializeField]
+    private int maxBullets = 30;
 
+    public float spawnInterval = 1f;
+    private float timeSinceLastSpawn = 0f;
+
+    void Start()
+    {
+        StartEnemyRoutine();
     }
-    void SpawnBullet(float posInitX, float posInitY, UnityEngine.Vector3 direction) {
-        posInitX = Random.Range(-5.6f, -4.6f);
-        posInitY = Random.Range(-5.6f, 5.6f);
+
+    void StartEnemyRoutine()
+    {
+        StartCoroutine("EnemyRoutine");
+    }
+
+    public void StopEnemyRoutine()
+    {
+        StopCoroutine("EnemyRoutine");
+    }
+
+    IEnumerator EnemyRoutine()
+    {
+        for (int i = 0; i < initialBullets; i++)
+        {
+            SpawnBullet();
+        }
+
+        while (true)
+        {
+            if (timeSinceLastSpawn >= spawnInterval && Bullet.bulletCount < maxBullets)
+            {
+                SpawnBullet();
+                timeSinceLastSpawn = 0f;
+            }
+            yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+
+    void SpawnBullet()
+    {
+        int randomSide = Random.Range(0, 4);
+        UnityEngine.Vector2 spawnPosition = UnityEngine.Vector2.zero;
+        UnityEngine.Vector2 direction = UnityEngine.Vector2.zero;
+
+        switch (randomSide)
+        {
+            case 0: // from left
+                spawnPosition = new UnityEngine.Vector2(-5f, Random.Range(-5f, 5f));
+                UnityEngine.Vector2 toRight = new UnityEngine.Vector2(5f, Random.Range(-5f, 5f));
+                direction = (toRight - spawnPosition).normalized;
+                break;
+            case 1: // from right
+                spawnPosition = new UnityEngine.Vector2(5f, Random.Range(-5f, 5f));
+                UnityEngine.Vector2 toLeft = new UnityEngine.Vector2(-5f, Random.Range(-5f, 5f));
+                direction = (toLeft - spawnPosition).normalized;
+                break;
+            case 2: // from above
+                spawnPosition = new UnityEngine.Vector2(Random.Range(-4.6f, 4.6f), 4.6f);
+                UnityEngine.Vector2 toDown = new UnityEngine.Vector2(Random.Range(-5f, 5f), -5f);
+                direction = (toDown - spawnPosition).normalized;
+                break;
+            case 3: // from down
+                spawnPosition = new UnityEngine.Vector2(Random.Range(-4.6f, 4.6f), -4.6f);
+                UnityEngine.Vector2 toAbove = new UnityEngine.Vector2(Random.Range(-5f, 5f), 5f);
+                direction = (toAbove - spawnPosition).normalized;
+                break;
+        }
+
+        GameObject bullet = Instantiate(bulletPrefab, spawnPosition, UnityEngine.Quaternion.identity);
+        bullet.GetComponent<Bullet>().direction = direction;
     }
 }

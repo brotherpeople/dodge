@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [HideInInspector]
+    public bool isGameover = false;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void SetGameOver() {
+        isGameover = true;
+        BulletSpawner bulletSpawner = FindObjectOfType<BulletSpawner>();
+
+        if (bulletSpawner != null) {
+            bulletSpawner.StopEnemyRoutine();
+        }
     }
 }
