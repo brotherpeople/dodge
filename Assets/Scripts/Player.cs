@@ -13,6 +13,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        GameManager.instance.IncreaseBulletCount();
+        GameManager.instance.IncreaseTime();
+
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
         float newXpos = transform.position.x + horizontalInput * moveSpeed * Time.deltaTime;
@@ -29,7 +32,6 @@ public class Player : MonoBehaviour
         {
             Debug.Log("Game Over");
             gameObject.GetComponent<Player>().enabled = false;
-            
-        }
+        } 
     }
 }
