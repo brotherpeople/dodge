@@ -13,8 +13,10 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!GameManager.instance.isGameStarted) return;
         GameManager.instance.IncreaseBulletCount();
         GameManager.instance.IncreaseTime();
+        GameManager.instance.setScore();
 
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");

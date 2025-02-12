@@ -8,6 +8,8 @@ public class Bullet : MonoBehaviour
     public Vector2 direction;
     public static int bulletCount = 0;
     public float speed;
+    public float minSpeed;
+    public float maxSpeed;
     private GameManager gameManager;
 
     void Start()
@@ -19,7 +21,10 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        speed = Random.Range(1, 3);
+        minSpeed = BulletSpawner.instance.GetMinSpeed();
+        maxSpeed = BulletSpawner.instance.GetMaxSpeed();
+
+        speed = Random.Range(minSpeed, maxSpeed);
 
         if(!gameManager.isGameover) {
             transform.Translate(direction * speed * Time.deltaTime);

@@ -7,6 +7,7 @@ using UnityEngine;
 public class BulletSpawner : MonoBehaviour
 {
     public GameObject bulletPrefab;
+    public static BulletSpawner instance = null;
 
     [SerializeField]
     private int initialBullets = 20;
@@ -14,12 +15,28 @@ public class BulletSpawner : MonoBehaviour
     [SerializeField]
     private int maxBullets = 30;
 
+    [SerializeField]
+    private int minSpeed;
+
+    [SerializeField]
+    private int maxSpeed;
+
+
     private float lastBulletIncrease = 0f;
 
+    void Awake()
+    {
+        if(instance == null) {
+            instance = this;
+        }
+    }
 
     void Start()
     {
-        StartEnemyRoutine();
+        if (GameManager.instance.isGameStarted)
+        {
+            StartEnemyRoutine();
+        }
     }
 
     void Update() {
@@ -31,7 +48,7 @@ public class BulletSpawner : MonoBehaviour
         }
     }
 
-    void StartEnemyRoutine()
+    public void StartEnemyRoutine()
     {
         StartCoroutine("EnemyRoutine");
     }
@@ -39,6 +56,18 @@ public class BulletSpawner : MonoBehaviour
     public void StopEnemyRoutine()
     {
         StopCoroutine("EnemyRoutine");
+    }
+
+    public float GetMaxBullets() {
+        return maxBullets;
+    }
+
+    public float GetMinSpeed() {
+        return minSpeed;
+    }
+
+    public float GetMaxSpeed() {
+        return maxSpeed;
     }
 
     IEnumerator EnemyRoutine()
