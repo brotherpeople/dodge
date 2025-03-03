@@ -11,5 +11,18 @@ Players control a character within a confined space while dodging bullets that s
 - Programmed in C#
 - Implements core game development concepts including player movement, projectile systems, collision detection, and difficulty scaling
 
+## Game Controls
+Press SPACE to start the game
+Use arrow keys to move the player
+Press ESC to pause/resume during gameplay
+Press R to restart after game over
+Press ESC at the game over screen to quit
+
+## How to Play
+Download the Dodge.zip file from the releases section
+Extract the ZIP file to any location on your computer
+Run Dodge.exe to start the game
+No installation required - the game runs as a standalone executable
+
 ## Future Development
 Future enhancements could include additional bullet patterns, scoring systems, power-ups, and visual effects to create a more engaging gaming experience.
