@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Windows.WebCam;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,10 +31,14 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject gameOverPanel;
+    
+    [SerializeField]
+    private GameObject pausePanel;
 
     private int score = 0;
 
     public bool isGameStarted = false;
+    private bool isGamePaused = false;
 
     private float playTime = 0f;
 
@@ -40,6 +46,9 @@ public class GameManager : MonoBehaviour
     void Start() {
         Time.timeScale = 0f;
         startPanel.SetActive(true);
+        pausePanel.SetActive(false);
+
+        Screen.SetResolution(640, 640, false);
     }
 
     void Awake()
@@ -58,6 +67,27 @@ public class GameManager : MonoBehaviour
         else if (isGameover && Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isGameover) { Application.Quit(); }
+            else if (isGameStarted) { TogglePause(); }
+        }
+    }
+
+    private void TogglePause()
+    {
+        isGamePaused = !isGamePaused;
+
+        if(isGamePaused)
+        {
+            Time.timeScale = 0f;
+            pausePanel.SetActive(true);
+        } else 
+        {
+            Time.timeScale = 1f;
+            pausePanel.SetActive(false);
         }
     }
 
